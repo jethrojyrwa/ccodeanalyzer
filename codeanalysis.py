@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-# Define C language components
+# sets which hold the different kind of tokens in c
 KEYWORDS = {
     "auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum",
     "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return",
@@ -18,7 +18,7 @@ OPERATORS = {"+", "-", "*", "/", "%", "++", "--", "=", "+=", "-=", "*=", "/=", "
 
 PUNCTUATORS = {";", ",", ".", ":", "(", ")", "{", "}", "[", "]"}
 
-# Define color mapping for different token types
+# color maps for defining the colour of each token in the NER
 COLOR_MAP = {
     "KEYWORD": "#F92672",          # Pink (Red)
     "IDENTIFIER": "#FD971F",       # Red-Orange
@@ -29,11 +29,12 @@ COLOR_MAP = {
     "PREPROCESSOR": "#888888"      # Gray for preprocessor directives
 }
 
+#handling removal of comments
 def remove_comments(text):
-    # Remove single-line comments (//)
-    text = re.sub(r'//.*', '', text)
-    
-    # Remove multi-line comments (/* ... */), including multi-line comments
+    # '//.*' followed by any characters (.*) until the end of the line.
+    text = re.sub(r'//.*', '', text) #sub searches for a given pattern and replaces it 
+
+    #Matches /* followed by any characters until */.    re.DOTALL allows the .*? to match across multiple lines.
     text = re.sub(r'/\*.*?\*/', '', text, flags=re.DOTALL)
     
     return text
@@ -41,10 +42,13 @@ def remove_comments(text):
 # Function to tokenize and format code with syntax highlighting and token labels
 def highlight_code(text):
     text = remove_comments(text)
+
     # Split code into lines
-    lines = text.split('\n')
+    lines = text.split('\n') #splits when it encounters a new line
     
-    highlighted_text = ""
+    highlighted_text = "" #holds output
+
+    #for the dataframe
     token_stats = {
         "KEYWORD": 0,
         "IDENTIFIER": 0,
@@ -58,14 +62,15 @@ def highlight_code(text):
     # Track seen tokens to avoid duplicate token boxes
     seen_tokens = set()
 
-    for line_number, line in enumerate(lines):
+
+    for line_number, line in enumerate(lines): #enumrate() returns the each line and the index of that line
         # Process each line
-        if line.strip() == "":
+        if line.strip() == "": #removes trailing and leading spaces 
             highlighted_text += "<br>"
             continue
             
         # Handle preprocessor directives (e.g., #include)
-        if line.strip().startswith("#"):
+        if line.strip().startswith("#"): 
             directive = line.strip()
             highlighted_text += f'<span class="token-container"><span class="token-box preprocessor-token">{directive}</span><span class="token-type preprocessor-type">PREPROCESSOR</span></span><br>'
             token_stats["PREPROCESSOR"] += 1
@@ -74,21 +79,21 @@ def highlight_code(text):
         # Process the line character by character to handle strings and other tokens
         i = 0
         line_output = ""
-        indentation = len(line) - len(line.lstrip())
+        indentation = len(line) - len(line.lstrip()) #calculates the number of spaces for indetatoin
         
         # Add indentation
         if indentation > 0:
-            line_output += "&nbsp;" * indentation
+            line_output += "&nbsp;" * indentation #to the particular line's output, the indentation
         
-        while i < len(line):
+        while i < len(line): #iteratres over the line
             # Handle strings
-            if line[i] == '"' or line[i] == "'":
-                quote_char = line[i]
-                start = i
+            if line[i] == '"' or line[i] == "'": #checks if the character is a quotations
+                quote_char = line[i] #stores either " or '
+                start = i #keeps track of index at which string starts
                 i += 1
                 # Find the end of the string
                 while i < len(line) and line[i] != quote_char:
-                    if line[i] == '\\' and i + 1 < len(line):
+                    if line[i] == '\\' and i + 1 < len(line): #checks to skip comments 
                         i += 2  # Skip escaped characters
                     else:
                         i += 1
@@ -119,7 +124,7 @@ def highlight_code(text):
                 i += 1
             
             # Handle operators and punctuators
-            elif any(line[i:i+len(op)] == op for op in sorted(OPERATORS | PUNCTUATORS, key=len, reverse=True)):
+            elif any(line[i:i+len(op)] == op for op in sorted(OPERATORS | PUNCTUATORS, key=len, reverse=True)): #sorted Combines OPERATORS and PUNCTUATORS into a single set.Sorts the tokens by length in descending order (to match the longest token first).
                 # Find the longest matching operator or punctuator
                 matched_token = None
                 for token in sorted(OPERATORS | PUNCTUATORS, key=len, reverse=True):
