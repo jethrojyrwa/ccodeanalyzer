@@ -199,6 +199,7 @@ def highlight_code(text):
 
 
 # CSS for the token boxes
+# CSS for the token boxes
 TOKEN_STYLE_CSS = """
 <style>
 .token-container {
@@ -209,7 +210,7 @@ TOKEN_STYLE_CSS = """
 
 .token-box {
     display: inline-block;
-    font-family: monospace;
+    font-family: 'Courier New', monospace;  /* Set to Courier New */
     padding: 2px 6px;
     border-radius: 3px 0 0 3px;
     color: white;
@@ -219,7 +220,7 @@ TOKEN_STYLE_CSS = """
 .token-type {
     display: inline-block;
     font-size: 10px;
-    font-family: monospace;
+    font-family: 'Courier New', monospace;  /* Set to Courier New */
     padding: 2px 4px;
     border-radius: 0 3px 3px 0;
     background-color: #444;
@@ -264,7 +265,7 @@ pre {
     background-color: #f9f9f9;
     padding: 10px;
     border-radius: 5px;
-    font-family: monospace;
+    font-family: 'Courier New', monospace;  /* Set to Courier New */
     line-height: 1.8;
     border: 1px solid #ddd;
 }
