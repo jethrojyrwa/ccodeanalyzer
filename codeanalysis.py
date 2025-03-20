@@ -84,7 +84,7 @@ def highlight_code(text):
         
         # Add indentation
         if indentation > 0:
-            line_output += "&nbsp;" * indentation #to the particular line's output, the indentation
+            line_output += "&nbsp;" * indentation #to the particular line's output,a non-breaking space
         
         while i < len(line): #iteratres over the line
             # Handle strings
