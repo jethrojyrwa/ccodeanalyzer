@@ -109,7 +109,7 @@ def highlight_code(text):
                     else:
                         line_output += f'<span class="token-container"><span class="token-box string-token" style="background-color:{COLOR_MAP["STRING"]}; color: white;">{string_content}</span></span>'
                 else:
-                    # in case of unclosed string case, it treats the rest as a string
+                    # in case of unclosed string case, it treats the rest of the line as a string which is unlikely to happen
                     string_content = line[start:]
                     if string_content not in seen_tokens:
                         line_output += f'<span class="token-container"><span class="token-box string-token">{string_content}</span><span class="token-type string-type">STRING</span></span>'
