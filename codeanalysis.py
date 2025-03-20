@@ -297,7 +297,15 @@ st.markdown(legend_html, unsafe_allow_html=True)
 col1, col2 = st.columns([2, 3])
 
 with col1:
-    code_input = st.text_area("Enter your C code:", height=300, value="""#include <stdio.h>
+    # Add file uploader for C code
+    uploaded_file = st.file_uploader("Upload a C program file", type=["c", "txt"])
+
+    if uploaded_file is not None:
+    # Read the uploaded file
+        code_input = uploaded_file.read().decode("utf-8")
+    else:
+        # Default text area for manual input
+        code_input = st.text_area("Enter your C code:", height=300, value="""#include <stdio.h>
 
 const int MAX = 100;
 const float PI = 3.14;
@@ -309,7 +317,8 @@ if (MAX > 50) {
 
 return 0;""")
 
-    st.button("Tokenize and Highlight", key="highlight_button")
+
+        st.button("Tokenize and Highlight", key="highlight_button")
 
 with col2:
     # Check if code has been provided
